@@ -11,8 +11,12 @@ services:
       - "8000:8000"
     volumes:
       - ./Backend/myapp:/app/backend
+    restart: on-failure
+    depends_on:
+      db:
+        condition: service_healthy #Adicionado pois o depends on ficava muito rápido, com helthcheck resolveu o problema
     networks:
-      - task_network
+      - backend
 
   db:
     image: mysql:latest
@@ -25,9 +29,13 @@ services:
     volumes:
       - ./database/mysql_db:/var/lib/mysql
     networks:
-      - task_network
+      - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
 
 networks:
-  task_network:
+  backend:
     driver: bridge
     
