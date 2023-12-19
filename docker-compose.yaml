@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  backend-container:
+    container_name: backend-container
+    build: 
+      context: ./Backend/myapp
+      dockerfile: Dockerfile
+    image: backend-image
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./Backend/myapp:/app/backend
+    
