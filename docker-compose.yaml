@@ -11,4 +11,23 @@ services:
       - "8000:8000"
     volumes:
       - ./Backend/myapp:/app/backend
+    networks:
+      - task_network
+
+  db:
+    image: mysql:latest
+    container_name: db-container
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: "TASKS"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database/mysql_db:/var/lib/mysql
+    networks:
+      - task_network
+
+networks:
+  task_network:
+    driver: bridge
     
