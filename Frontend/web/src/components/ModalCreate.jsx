@@ -16,7 +16,6 @@ export const ModalCreate = ({ isOpen, onClose, onCreateTask }) => {
 
   const handleSave = async () => {
     try {
-      console.log("clicou");
       let url = 'http://127.0.0.1:8000/create-task/'
       await axios.post(url, {
         task,

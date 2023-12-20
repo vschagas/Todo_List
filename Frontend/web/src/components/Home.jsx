@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ModalCreate } from './ModalCreate';
+import { ModalEdit } from './ModalEdit';
 
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalEditOpen, setIsModalEditOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -23,12 +25,10 @@ const TaskList = () => {
     }
   };
 
-  const handleEdit = (taskId) => {
-    console.log(`Editar a tarefa com ID ${taskId}`);
-  };
+  const handleUpdate = () => {
+    setIsModalEditOpen(true);
+    fetchData();
 
-  const handleUpdate = (taskId, newStatus) => {
-    console.log(`Atualizar a tarefa com ID ${taskId} para o status ${newStatus}`);
   };
 
   const handleCloseModal = () => {
@@ -44,7 +44,11 @@ const TaskList = () => {
   return (
     <div>
       <h1>Task List</h1>
-      <ModalCreate isOpen={isModalOpen} onClose={handleCloseModal} onCreateTask={handleCreateTask} />
+      <ModalCreate
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onCreateTask={handleCreateTask}
+        />
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -63,13 +67,18 @@ const TaskList = () => {
                 <td>{task.task}</td>
                 <td>{task.status}</td>
                 <td>
-                  <button onClick={() => handleEdit(task.id)}>Editar</button>
+                  <ModalEdit
+                    isOpen={isModalEditOpen}
+                    onClose={() => setIsModalEditOpen(false)}
+                    onUpdateTask={handleUpdate}
+                    taskId={task.id}
+                  />
                 </td>
                 <td>
-                  <select onChange={(e) => handleUpdate(task.id, e.target.value)}>
-                    <option value="pendente">Pendente</option>
-                    <option value="concluir">Concluir</option>
-                  </select>
+                  <button
+                    // onClick={(e) => handleUpdate(task.id, e.target.value)}
+                    >Concluir
+                  </button>
                 </td>
               </tr>
             ))}
