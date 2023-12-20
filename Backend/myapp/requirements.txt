@@ -4,3 +4,5 @@ pip
 # django-autoreload==1.5.0
 mysqlclient==2.1.0
 djangorestframework==3.13.1
+django-cors-headers
+django-cors-middleware
