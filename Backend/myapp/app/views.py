@@ -38,3 +38,35 @@ def read_tasks(request):
 
     else:
         return JsonResponse({'error': 'Método não permitido'}, status=405)
+
+
+@csrf_exempt
+def update_task(request):
+    if request.method == 'PUT':
+        try:
+            task_id = request.GET.get('id')
+
+            if not task_id:
+                return JsonResponse(
+                    {'error': 'ID da task não fornecido'},
+                    status=400)
+
+            try:
+                task = Task.objects.get(id=task_id)
+            except Task.DoesNotExist:
+                return JsonResponse(
+                    {'error': 'Task não encontrada'},
+                    status=404)
+
+            data = json.loads(request.body)
+            task.task = data.get('task', task.task)
+            task.status = data.get('status', task.status)
+            task.save()
+
+            return JsonResponse({'message': 'Task editada com sucesso!'})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Formato JSON inválido'}, status=400)
+
+    else:
+        return JsonResponse({'error': 'Método não permitido'}, status=405)
