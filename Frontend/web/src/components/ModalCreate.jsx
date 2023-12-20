@@ -43,27 +43,31 @@ export const ModalCreate = ({ isOpen, onClose, onCreateTask }) => {
           <Modal.Title>Nova Tarefa</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <label>
-            Descrição:
-            <input
+          <form>
+            <div class="form-group">
+              <label for="descricao">Descrição:</label>
+              <input
               className="form-control"
               type="text"
               placeholder="Descrição"
+              id='descricao'
               value={task}
               onChange={(e) => setTask(e.target.value)}
             />
-          </label>
-          <label>
-            Status:
-            <select
+            </div>
+            <div class="form-group">
+              <label for="status">Status:</label>
+              <select
               className="form-control"
+              id='status'
               value={status}
               onChange={(e) => setStatus(e.target.value)}
             >
               <option value="Pendente">Pendente</option>
               <option value="Concluído">Concluído</option>
-            </select>
-          </label>
+              </select>
+            </div>
+          </form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
