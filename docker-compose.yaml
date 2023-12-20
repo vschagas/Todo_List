@@ -1,6 +1,22 @@
 version: '3'
 
 services:
+  frontend-container:
+    container_name: frontend-container
+    # command: bash -c "npm install && npm run dev"
+    build:
+      context: ./Frontend/web
+      dockerfile: Dockerfile
+    image: frontend-image
+    ports:
+      - "3000:3000"
+    restart: on-failure
+    depends_on:
+        - db
+        - backend-container
+    networks:
+      - frontend
+        
   backend-container:
     container_name: backend-container
     build: 
@@ -17,6 +33,7 @@ services:
         condition: service_healthy #Adicionado pois o depends on ficava muito rápido, com helthcheck resolveu o problema
     networks:
       - backend
+      - frontend
 
   db:
     image: mysql:latest
@@ -37,6 +54,9 @@ services:
       retries: 5
 
 networks:
+  frontend:
+    driver: bridge
   backend:
     driver: bridge
+  
     
