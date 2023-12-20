@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Task
 import json
+from django.db import transaction
 
 
 @csrf_exempt
@@ -67,6 +68,36 @@ def update_task(request):
 
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Formato JSON inválido'}, status=400)
+
+    else:
+        return JsonResponse({'error': 'Método não permitido'}, status=405)
+
+
+@csrf_exempt
+@transaction.atomic
+def delete_tasks(request):
+    if request.method == 'DELETE':
+        task_ids = request.GET.getlist('id')
+
+        if not task_ids:
+            return JsonResponse(
+                {'error': 'Parâmetro "id" não fornecido'},
+                status=400)
+
+        try:
+            with transaction.atomic():
+                tasks_deleted = Task.objects.filter(id__in=task_ids).delete()
+
+                if tasks_deleted[0] > 0:
+                    return JsonResponse(
+                        {'message': f'{tasks_deleted[0]} tasks excluídas com sucesso!'})
+                else:
+                    return JsonResponse(
+                        {'error': 'Tarefa não encontrada com os IDs fornecidos'},
+                        status=404)
+
+        except Exception as e:
+            return JsonResponse({'error': f'Erro ao excluir tarefas: {str(e)}'}, status=500)
 
     else:
         return JsonResponse({'error': 'Método não permitido'}, status=405)
