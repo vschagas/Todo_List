@@ -24,17 +24,17 @@ def create_task(request):
         return JsonResponse({'error': 'Método não permitido'}, status=405)
 
 
-# def read_tasks(request):
-#     if request.method == 'GET':
-#         tasks = Task.objects.all()
+def read_tasks(request):
+    if request.method == 'GET':
+        tasks = Task.objects.all()
 
-#         task_list = [{
-#             "id": task.id,
-#             "task": task.task,
-#             "status": task.status}
-#             for task in tasks]
+        task_list = [{
+            "id": task.id,
+            "task": task.task,
+            "status": task.status}
+            for task in tasks]
 
-#         return JsonResponse({'tasks': task_list})
+        return JsonResponse({'tasks': task_list})
 
-#     else:
-#         return JsonResponse({'error': 'Método não permitido'}, status=405)
+    else:
+        return JsonResponse({'error': 'Método não permitido'}, status=405)
