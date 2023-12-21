@@ -41,6 +41,24 @@ def read_tasks(request):
         return JsonResponse({'error': 'Método não permitido'}, status=405)
 
 
+def read_task_by_id(request):
+    task_id = request.GET.get('id', '')
+
+    if task_id:
+        try:
+            task = Task.objects.get(id=task_id)
+            task_data = {
+                "id": task.id,
+                "task": task.task,
+                "status": task.status
+            }
+            return JsonResponse({'task': task_data})
+        except Task.DoesNotExist:
+            return JsonResponse({'error': 'Tarefa não encontrada'}, status=404)
+    else:
+        return JsonResponse({'error': 'ID da tarefa não fornecido'}, status=400)
+
+
 @csrf_exempt
 def update_task(request):
     if request.method == 'PUT':
