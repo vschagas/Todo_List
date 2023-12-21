@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ModalCreate } from './ModalCreate';
 import { ModalEdit } from './ModalEdit';
-
+import { ModalConcluir } from './ModalConcluir';
+import Table from 'react-bootstrap/Table';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
@@ -26,9 +28,7 @@ const TaskList = () => {
   };
 
   const handleUpdate = () => {
-    setIsModalEditOpen(true);
     fetchData();
-
   };
 
   const handleCloseModal = () => {
@@ -40,7 +40,6 @@ const TaskList = () => {
     fetchData();
   };
 
-
   return (
     <div>
       <h1>Task List</h1>
@@ -48,17 +47,16 @@ const TaskList = () => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onCreateTask={handleCreateTask}
-        />
+      />
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <table>
+        <Table striped bordered hover>
           <thead>
             <tr>
               <th>Tarefa</th>
-              <th>Status</th>
-              <th>Editar</th>
-              <th>Atualizar</th>
+              <th class="align-middle">Status</th>
+              <th class="align-middle">Açôes</th>
             </tr>
           </thead>
           <tbody>
@@ -67,23 +65,29 @@ const TaskList = () => {
                 <td>{task.task}</td>
                 <td>{task.status}</td>
                 <td>
-                  <ModalEdit
-                    isOpen={isModalEditOpen}
-                    onClose={() => setIsModalEditOpen(false)}
-                    onUpdateTask={handleUpdate}
-                    taskId={task.id}
-                  />
+                  <ButtonGroup>
+                    <ModalEdit
+                      isOpen={isModalEditOpen}
+                      onClose={() => setIsModalEditOpen(false)}
+                      onUpdateTask={handleUpdate}
+                      taskId={task.id}
+                      onStatus={ task.status }
+                    />
+
+                    <ModalConcluir
+                      isOpen={isModalEditOpen}
+                      onClose={() => setIsModalEditOpen(false)}
+                      onUpdateTask={handleUpdate}
+                      taskId={task.id}
+                      onStatus={ task.status }
+                    />
+                  </ButtonGroup>
                 </td>
-                <td>
-                  <button
-                    // onClick={(e) => handleUpdate(task.id, e.target.value)}
-                    >Concluir
-                  </button>
-                </td>
+                
               </tr>
             ))}
           </tbody>
-        </table>
+        </Table>
       )}
     </div>
   );

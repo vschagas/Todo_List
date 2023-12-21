@@ -72,7 +72,10 @@ export const ModalCreate = ({ isOpen, onClose, onCreateTask }) => {
           <Button variant="secondary" onClick={handleClose}>
             Fechar
           </Button>
-          <Button variant="primary" onClick={handleSave}>
+          <Button
+            variant="primary"
+            onClick={handleSave}
+            disabled={!task}>
             Salvar
           </Button>
         </Modal.Footer>

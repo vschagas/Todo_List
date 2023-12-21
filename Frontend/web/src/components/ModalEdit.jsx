@@ -3,20 +3,16 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 
-export const ModalEdit = ({ isOpen, onClose, onUpdateTask, taskId }) => {
+export const ModalEdit = (
+  { isOpen, onClose, onUpdateTask, taskId, onStatus }) => {
   
   const [show, setShow] = useState(false);
   const [task, setTask] = useState('');
   const [status, setStatus] = useState('Pendente');
 
-
-  // const handleShow = () => setShow(true);
-
   const handleShow = () => {
 
-    console.log(taskId);
-    // setTask('');
-    // setStatus('Pendente');
+    console.log(task.status);
     setShow(true);
   };
 
@@ -42,7 +38,11 @@ export const ModalEdit = ({ isOpen, onClose, onUpdateTask, taskId }) => {
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button
+        variant="warning"
+        size="sm"
+        onClick={handleShow}
+        style={{ display: onStatus === 'Concluído' ? 'none' : 'block' }}>
         Editar
       </Button>
 
@@ -81,7 +81,10 @@ export const ModalEdit = ({ isOpen, onClose, onUpdateTask, taskId }) => {
           <Button variant="secondary" onClick={handleClose}>
             Fechar
           </Button>
-          <Button variant="primary" onClick={handleSave}>
+          <Button
+            variant="primary"
+            onClick={handleSave}
+            disabled={!task}>
             Salvar
           </Button>
         </Modal.Footer>
