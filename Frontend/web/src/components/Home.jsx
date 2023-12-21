@@ -54,7 +54,7 @@ const TaskList = () => {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Tarefa</th>
+              <th class="align-middle">Tarefa</th>
               <th class="align-middle">Status</th>
               <th class="align-middle">Ações</th>
             </tr>

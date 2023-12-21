@@ -21,6 +21,10 @@ services:
         
   backend-container:
     container_name: backend-container
+    # command: bash -c "
+    #   python manage.py migrate
+    #   && python manage.py runserver 0.0.0.0:8000
+    #   "
     build: 
       context: ./Backend/myapp
       dockerfile: Dockerfile
@@ -35,7 +39,9 @@ services:
         condition: service_healthy #Adicionado pois o depends on ficava muito rápido, com helthcheck resolveu o problema
     networks:
       - backend
-      # - frontend
+      - frontend
+    stdin_open: true
+    tty: true
 
   db:
     image: mysql:latest
@@ -54,6 +60,46 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    environment:
+      - "MINIO_ROOT_USER=user"
+      - "MINIO_ROOT_PASSWORD=password"
+    command: server /data --console-address :9001
+
+  createbucket:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add --api s3v4 s3 http://minio:9000 user password;
+      /usr/bin/mc mb s3/static/;
+      /usr/bin/mc anonymous set download s3/static;
+      "
+  # django_s3_mock:
+  #   build:
+  #     context: .
+  #   ports:
+  #     - "7000:7000"
+  #   environment:
+  #     - MINIO_ACCESS_KEY_ID=user
+  #     - MINIO_SECRET_ACCESS_KEY=password
+  #     - MINIO_STORAGE_BUCKET_NAME=static
+  #     - MINIO_API=http://minio:9000
+  #   depends_on:
+  #     - minio
+  #     - createbucket
+
+volumes:
+  minio_data:
 
 networks:
   frontend:

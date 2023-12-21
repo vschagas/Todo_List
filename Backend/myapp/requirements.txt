@@ -6,3 +6,8 @@ mysqlclient==2.1.0
 djangorestframework==3.13.1
 django-cors-headers
 django-cors-middleware
+django-storages==1.13.2
+minio
+boto3==1.26.68
+python-dotenv
+Pillow
