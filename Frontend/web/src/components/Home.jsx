@@ -56,7 +56,7 @@ const TaskList = () => {
             <tr>
               <th>Tarefa</th>
               <th class="align-middle">Status</th>
-              <th class="align-middle">Açôes</th>
+              <th class="align-middle">Ações</th>
             </tr>
           </thead>
           <tbody>
